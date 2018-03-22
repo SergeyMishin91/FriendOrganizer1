@@ -34,7 +34,7 @@ namespace FriendOrganizer.UI.ViewModel
         private Friend selectedFriend;
 
         public Friend SelectedFriend
-        {
+        { 
             get { return selectedFriend; }
             set { selectedFriend = value; }
         }
