@@ -1,17 +1,13 @@
 ﻿using FriendOrganizer.Model;
 using FriendOrganizer.UI.Data;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FriendOrganizer.UI.ViewModel
 {
-    public class MainViewModel
+    public class MainViewModel: ViewModelBase
     {
         private IFriendDataService _friendDataService;
+        private Friend selectedFriend;
 
         public MainViewModel(IFriendDataService friendDataService)
         {
@@ -31,12 +27,15 @@ namespace FriendOrganizer.UI.ViewModel
 
         public ObservableCollection<Friend> Friends { get; set; }
 
-        private Friend selectedFriend;
-
         public Friend SelectedFriend
         { 
             get { return selectedFriend; }
-            set { selectedFriend = value; }
+            set
+            {
+                selectedFriend = value;
+                OnPropertyChanged();
+            }
+            
         }
 
     }
