@@ -13,7 +13,7 @@ namespace FriendOrganizer.UI
         {
             var bootstrapper = new Bootstrapper();
             var container = bootstrapper.Bootstrap();
-
+            
             var mainVindow = container.Resolve<MainWindow>();
             mainVindow.Show();
         }
