@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace FriendOrganizer.UI.Data
 {
-    public class LookupDataService
+    public class LookupDataService : IFriendLookupDataService
     {
         private Func<FriendOrganizerDbContext> _contextCreator;
 
