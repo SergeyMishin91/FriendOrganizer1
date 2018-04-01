@@ -19,6 +19,7 @@ namespace FriendOrganizer.UI.Data
 
         public async Task<IEnumerable<LookupItem>> GetFriendLookupAsync()
         {
+            // downlad list of friends from database
             using (var ctx = _contextCreator())
             {
                 return await ctx.Friends.AsNoTracking()
