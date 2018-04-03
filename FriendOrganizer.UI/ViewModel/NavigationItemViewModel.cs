@@ -13,7 +13,7 @@
         public int Id { get; }
         public string DisplayMember
         {
-            get { return _displayMember}
+            get { return _displayMember; }
             set
             {
                 _displayMember = value;
