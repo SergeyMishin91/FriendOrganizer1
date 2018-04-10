@@ -17,6 +17,11 @@ namespace FriendOrganizer.UI.Data.Repositories
             _context = context;
         }
 
+        public void Add(Friend friend)
+        {
+            _context.Friends.Add(friend);
+        }
+
         //searching friend by id parameter
         public async Task<Friend> GetByIdAsync(int friendId)
         {
@@ -27,6 +32,11 @@ namespace FriendOrganizer.UI.Data.Repositories
         public bool HasChanges()
         {
             return _context.ChangeTracker.HasChanges();
+        }
+
+        public void Remove(Friend model)
+        {
+            _context.Friends.Remove(model);
         }
 
         public async Task SaveAsync()

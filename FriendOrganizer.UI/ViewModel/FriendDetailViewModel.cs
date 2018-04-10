@@ -1,9 +1,11 @@
-﻿using FriendOrganizer.UI.Data;
+﻿using FriendOrganizer.Model;
+using FriendOrganizer.UI.Data;
 using FriendOrganizer.UI.Data.Repositories;
 using FriendOrganizer.UI.Event;
 using FriendOrganizer.UI.Wrapper;
 using Prism.Commands;
 using Prism.Events;
+using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -22,13 +24,21 @@ namespace FriendOrganizer.UI.ViewModel
             _friendRepository = friendRepository;
             _eventAggregator = eventAggregator;
 
-
             SaveCommand = new DelegateCommand(OnSaveExecute, OnSaveCanExecute);
+            DeleteCommand = new DelegateCommand(OnDeleteExecute);
         }
 
-        public async Task LoadAsync(int friendId)
+        private async void OnDeleteExecute()
         {
-            var friend = await _friendRepository.GetByIdAsync(friendId);
+            _friendRepository.Remove(Friend.Model);
+            await _friendRepository.SaveAsync();
+        }
+
+        public async Task LoadAsync(int? friendId)
+        {
+            var friend = friendId.HasValue
+                ? await _friendRepository.GetByIdAsync(friendId.Value)
+                : CreateNewFriend();
 
             Friend = new FriendWrapper(friend);
             Friend.PropertyChanged += (s, e) =>
@@ -43,6 +53,10 @@ namespace FriendOrganizer.UI.ViewModel
                   }
               };
             ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+            if (Friend.Id == 0)
+            {
+                Friend.FirstName = "";
+            }
         }
 
         public FriendWrapper Friend
@@ -72,6 +86,7 @@ namespace FriendOrganizer.UI.ViewModel
 
 
         public ICommand SaveCommand { get; }
+        public ICommand DeleteCommand { get; }
 
         private async void OnSaveExecute()
         {
@@ -87,10 +102,15 @@ namespace FriendOrganizer.UI.ViewModel
 
         private bool OnSaveCanExecute()
         {
-            //TODO: Check in addition if friend has changes
             return Friend != null && !Friend.HasErrors && HasChanges;
         }
 
+        private Friend CreateNewFriend()
+        {
+            var friend = new Friend();
+            _friendRepository.Add(friend);
+            return friend;
+        }
 
 
     }
