@@ -31,8 +31,14 @@ namespace FriendOrganizer.UI.ViewModel
 
             NavigationViewModel = navigationViewModel;
 
+            _eventAggregator.GetEvent<AfterFriendDeletedEvent>()
+                .Subscribe(AfterFriendDeleted);
         }
 
+        private void AfterFriendDeleted(int friendId)
+        {
+            FriendDetailViewModel = null;
+        }
 
         public INavigationViewModel NavigationViewModel { get; }
 

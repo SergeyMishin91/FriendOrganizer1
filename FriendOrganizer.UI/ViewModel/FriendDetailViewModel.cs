@@ -2,6 +2,7 @@
 using FriendOrganizer.UI.Data;
 using FriendOrganizer.UI.Data.Repositories;
 using FriendOrganizer.UI.Event;
+using FriendOrganizer.UI.View.Services;
 using FriendOrganizer.UI.Wrapper;
 using Prism.Commands;
 using Prism.Events;
@@ -15,14 +16,17 @@ namespace FriendOrganizer.UI.ViewModel
     {
         private IFriendRepository _friendRepository;
         private IEventAggregator _eventAggregator;
+        private IMessageDialogService _messageDialogService;
         private FriendWrapper _friend;
         private bool _hasChanges;
 
         public FriendDetailViewModel(IFriendRepository friendRepository,
-            IEventAggregator eventAggregator)
+            IEventAggregator eventAggregator,
+            IMessageDialogService messageDialogService)
         {
             _friendRepository = friendRepository;
             _eventAggregator = eventAggregator;
+            _messageDialogService = messageDialogService;
 
             SaveCommand = new DelegateCommand(OnSaveExecute, OnSaveCanExecute);
             DeleteCommand = new DelegateCommand(OnDeleteExecute);
@@ -30,8 +34,16 @@ namespace FriendOrganizer.UI.ViewModel
 
         private async void OnDeleteExecute()
         {
-            _friendRepository.Remove(Friend.Model);
-            await _friendRepository.SaveAsync();
+            var result = _messageDialogService.ShowOkCancelDialog(
+                $"Действительно ли хотите удалить {Friend.FirstName} {Friend.LastName}?",
+                "Question");
+            if (result == MessageDialogResult.OK)
+            { 
+                _friendRepository.Remove(Friend.Model);
+                await _friendRepository.SaveAsync();
+                _eventAggregator.GetEvent<AfterFriendDeletedEvent>()
+                    .Publish(Friend.Id);
+            }
         }
 
         public async Task LoadAsync(int? friendId)
@@ -80,10 +92,8 @@ namespace FriendOrganizer.UI.ViewModel
                     OnPropertyChanged();
                     ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
                 }
-                
             }
         }
-
 
         public ICommand SaveCommand { get; }
         public ICommand DeleteCommand { get; }
@@ -111,7 +121,5 @@ namespace FriendOrganizer.UI.ViewModel
             _friendRepository.Add(friend);
             return friend;
         }
-
-
     }
 }
