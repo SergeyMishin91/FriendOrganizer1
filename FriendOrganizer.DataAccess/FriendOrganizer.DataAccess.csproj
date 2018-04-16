@@ -60,6 +60,7 @@
     <Compile Include="Migrations\201804131747513_AddedFriendPhoneNumbers.Designer.cs">
       <DependentUpon>201804131747513_AddedFriendPhoneNumbers.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\AddedMeeting.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -8,7 +8,9 @@ using System.Threading.Tasks;
 
 namespace FriendOrganizer.UI.Data.Lookups
 {
-    public class LookupDataService : IFriendLookupDataService, IProgrammingLanguageLookupDataService
+    public class LookupDataService : IFriendLookupDataService, 
+        IProgrammingLanguageLookupDataService, 
+        IMeetingLookupDataService
     {
         private Func<FriendOrganizerDbContext> _contextCreator;
 
@@ -45,6 +47,23 @@ namespace FriendOrganizer.UI.Data.Lookups
                         DisplayMember = pl.Name
                     })
                     .ToListAsync();
+            }
+        }
+
+        public async Task<List<LookupItem>> GetMeetingLookupAsync()
+        {
+            // downlad list of meetings from database
+            using (var ctx = _contextCreator())
+            {
+                var items = await ctx.Meetings.AsNoTracking()
+                    .Select(m =>
+                    new LookupItem
+                    {
+                        Id = m.Id,
+                        DisplayMember = m.Title
+                    })
+                    .ToListAsync();
+                return items;
             }
         }
     }
