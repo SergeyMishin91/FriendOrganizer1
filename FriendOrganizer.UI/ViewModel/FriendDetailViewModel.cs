@@ -160,6 +160,13 @@ namespace FriendOrganizer.UI.ViewModel
 
         protected override async void OnDeleteExecute()
         {
+            if (await _friendRepository.HasMeetingsAsync(Friend.Id))
+            {
+                _messageDialogService.ShowInfoDialog($"{Friend.FirstName} " +
+                    $"{Friend.LastName} не может быть удален, т.к. участвует во встрече.");
+                return;
+            }
+
             var result = _messageDialogService.ShowOkCancelDialog(
                 $"Действительно ли хотите удалить {Friend.FirstName} {Friend.LastName}?",
                 "Question");

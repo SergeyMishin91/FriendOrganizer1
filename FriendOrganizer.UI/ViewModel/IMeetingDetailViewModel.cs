@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace FriendOrganizer.UI.ViewModel
+﻿namespace FriendOrganizer.UI.ViewModel
 {
     public interface IMeetingDetailViewModel:IDetailViewModel
     {
