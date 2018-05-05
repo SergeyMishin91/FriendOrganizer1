@@ -2,11 +2,11 @@
 
 namespace FriendOrganizer.UI.Event
 {
-    // <int> is the specific parameter like friendId
-    public class OpenDetailViewEvent:PubSubEvent<OpenDetailViewEventArgs>
+    class AfterDetailClosedEvent : PubSubEvent<AfterDetailClosedEventArgs>
     {
     }
-    public class OpenDetailViewEventArgs
+
+    public class AfterDetailClosedEventArgs
     {
         public int Id { get; set; }
         public string ViewModelName { get; set; }
